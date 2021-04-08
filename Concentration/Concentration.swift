@@ -6,19 +6,26 @@
 //  Copyright © 2020 VGBNDGRL. All rights reserved.
 //
 
+/* notice there is no UIKit, just Foundation, because again, Models are UI independent */
 import Foundation
 
-//classes are reference types, we can have many pointers to this file
+/* Whenever we build classes think about its public API*/
+/* What is an API? Application Programming Interface
+ - A list of all the methods and instace variables in the class
+ - A PUBLIC API is all the instance vars and methods you will allow the public(other classes) to call/use
+ - Basically HOW you USE the class
+ */
+
+/* What are the essentials of what this class does, what does my game do? */
 class Concentration {
-    
+    // We need to define a 'card'
     var cards = [Card]()
     
     var indexOfOneAndOnlyFaceUpCard: Int?
     
     func chooseCard(at index: Int) {
-        if !cards[index].isMatched {
+        if  !cards[index].isMatched {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
-                // check if cards match
                 if cards[matchIndex].identifier == cards[index].identifier {
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
@@ -26,7 +33,6 @@ class Concentration {
                 cards[index].isFaceUp = true
                 indexOfOneAndOnlyFaceUpCard = nil
             } else {
-                //either no cards or 2 cards are face up
                 for flipDownIndex in cards.indices {
                     cards[flipDownIndex].isFaceUp = false
                 }
@@ -36,16 +42,18 @@ class Concentration {
         }
     }
     
+    
     init(numberOfPairsOfCards: Int) {
-        //underbar is used as control var because we do not care for it
-        for _ in 1...numberOfPairsOfCards {
+        // underbar in Swift means we don't care to give it a name, becuase we won't use it later
+        for _ in 0..<numberOfPairsOfCards {
+            /* A card is a Struct, they get free initializers, and their free init initializes all of their vars. Classes do not get this free init. */
+            /* I do not want to  initialize these when creating an instance of Card, so I will ceate an init in that respective struct*/
             let card = Card()
-            cards += [card, card] // this is the same as appending to the array
-            
+            cards += [card,card] // same thing as two following lines:
             //            cards.append(card)
-            //            cards.append(card) // different copy, when we passed structs around, we are copying them
+            //            cards.append(card) // these are TWO DIFFERENT cards
         }
         // TODO: Shuffle the cards
+        
     }
-    
 }
